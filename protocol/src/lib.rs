@@ -17,6 +17,9 @@
 #![warn(clippy::unwrap_used)]
 #![deny(unsafe_code)]
 
+#[macro_use]
+extern crate log;
+
 // TODO(https://github.com/signalapp/libsignal/issues/285): it should be an aspiration to
 // eventually warn and then error for public members without docstrings. Also see
 // https://doc.rust-lang.org/rustdoc/what-to-include.html for background.
@@ -29,7 +32,7 @@ mod fingerprint;
 mod group_cipher;
 mod identity_key;
 pub mod incremental_mac;
-pub mod kem;
+mod kem;
 mod proto;
 mod protocol;
 mod ratchet;
@@ -83,3 +86,19 @@ pub use storage::{
     KyberPreKeyStore, PreKeyStore, ProtocolStore, SenderKeyStore, SessionStore, SignedPreKeyStore,
 };
 pub use timestamp::Timestamp;
+
+pub fn log_with_context(module: &str, message: &str) {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let timestamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_millis();
+    println!("[{} | {:?} | {}] {}", timestamp, std::thread::current().id(), module, message);
+}
+
+// Then add these prints at the beginning of major functions:
+debug!("Entering function: {}", function_name_here);
+// At important data transformation points:
+debug!("Processing data: {:?}", data_being_processed);
+// Before returning from functions:
+debug!("Exiting function: {} with result: {:?}", function_name_here, result);

@@ -15,3 +15,7 @@ pub use prekey::{PreKeyId, PreKeyRecord};
 pub use session::SessionRecord;
 pub(crate) use session::{InvalidSessionError, SessionState};
 pub use signed_prekey::{GenericSignedPreKey, SignedPreKeyId, SignedPreKeyRecord};
+
+// Add to state transitions
+debug!("State transition: {} -> {}", previous_state, new_state);
+debug!("Updating session state: session_id={}", session_id);
