@@ -20,6 +20,8 @@ pub async fn group_encrypt<R: Rng + CryptoRng>(
     plaintext: &[u8],
     csprng: &mut R,
 ) -> Result<SenderKeyMessage> {
+    println!("GroupCipher: Encrypting message for group: {:?}", sender);
+
     let mut record = sender_key_store
         .load_sender_key(sender, distribution_id)
         .await?
@@ -129,6 +131,8 @@ pub async fn group_decrypt(
     sender_key_store: &mut dyn SenderKeyStore,
     sender: &ProtocolAddress,
 ) -> Result<Vec<u8>> {
+    println!("GroupCipher: Decrypting message from sender: {:?}", sender);
+
     let skm = SenderKeyMessage::try_from(skm_bytes)?;
 
     let distribution_id = skm.distribution_id();
